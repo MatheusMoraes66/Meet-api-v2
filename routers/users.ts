@@ -1,14 +1,15 @@
-import { Router } from '../common/router';
-import * as restify from 'restify';
-import { User } from '../models/users';
-import { NotFoundError } from 'restify-errors';
+import { Router } from '../common/router'
+import * as restify from 'restify'
+import { NotFoundError } from 'restify-errors'
+import { User } from '../models/users'
+
 
 class UsersRouter extends Router {
 
     constructor() {
         super()
         this.on('beforeRender', document => {
-            document.password = undefined
+            document.password = undefined // retira o password no retorno da resposta
         })
     }
 
@@ -21,8 +22,7 @@ class UsersRouter extends Router {
         })
 
         application.get('/users/:id', (req, resp, next) => {
-            let id = parseInt(req.params.id);
-            User.findById(id)
+            User.findById(req.params.id)
                 .then(this.render(resp, next))
                 .catch(next)
         })
@@ -35,39 +35,34 @@ class UsersRouter extends Router {
         })
 
         application.put('/users/:id', (req, resp, next) => {
-            User.update({ _id: req.params.id }, req.body)
+            const options = { runValidators: true, overwrite: true }
+            User.update({ _id: req.params.id }, req.body, options)
                 .exec().then(result => {
                     if (result.n) {
                         return User.findById(req.params.id)
                     } else {
-                        throw new NotFoundError('Documento não encontrado.')
+                        throw new NotFoundError('Documento não encontrado')
                     }
-                }).then(user => {
-                    resp.json(user)
-                    return next
-
-                })
+                }).then(this.render(resp, next))
                 .catch(next)
         })
 
         application.patch('/users/:id', (req, resp, next) => {
-            const options = { new: true }
+            const options = { runValidators: true, new: true }
             User.findByIdAndUpdate(req.params.id, req.body, options)
                 .then(this.render(resp, next))
                 .catch(next)
         })
 
         application.del('/users/:id', (req, resp, next) => {
-            User.deleteOne({ _id: req.params.id }).exec()
-                .then((cmdResult: any) => {
-                    if (cmdResult.result) {
-                        resp.send(204)
-                    } else {
-                        throw new NotFoundError('Documento não encontrado.')
-                    }
-                    return next()
-                })
-                .catch(next)
+            User.remove({ _id: req.params.id }).exec().then((cmdResult: any) => {
+                if (cmdResult.result.n) {
+                    resp.send(204)
+                } else {
+                    throw new NotFoundError('Documento não encontrado')
+                }
+                return next()
+            }).catch(next)
         })
 
     }
