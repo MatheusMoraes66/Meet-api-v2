@@ -1,4 +1,5 @@
 import * as restify from 'restify'
+import { logger } from '../configs/logger';
 // import { Router } from '../../common/router';
 // import { environment } from '../../common/environment'
 // import * as mongoose from 'mongoose';
@@ -72,6 +73,6 @@ export function createServer(){
     });
 
     application.listen(8080, function () {
-        console.log('%s listening at %s', application.name, application.url);
+        logger.info(`Application : ${application.name} in ${application.url}`)
     });
 }

@@ -31,3 +31,18 @@ Nesse comando executamos o servidor em si, ele roda os arquivos JavaScript que e
 
 - Review (http://localhost:8081/reviews)
   - GET, POST e DELETE. 
+
+
+## Logger
+
+>FATAL: Used to represent a catastrophic situation — your application cannot recover. Logging at this level usually signifies the end of the program.
+
+>ERROR: Represents an error condition in the system that happens to halt a specific operation, but not the overall system. You can log at this level when a third-party API is returning errors.
+
+>WARN: Indicates runtime conditions that are undesirable or unusual, but not necessarily errors. An example could be using a backup data source when the primary source is unavailable.
+
+>INFO: Info messages are purely informative. Events that are user-driven or application-specific may be logged at this level. A common use of this level is to log interesting runtime events, such as the startup or shutdown of a service.
+
+>DEBUG: Used to represent diagnostic information that may be needed for troubleshooting.
+
+>TRACE: Captures every possible detail about an application's behavior during development.
