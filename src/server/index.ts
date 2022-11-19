@@ -1,4 +1,5 @@
-import * as restify from 'restify'
+import { createServer, plugins, Server} from 'restify'
+import { environment } from '../configs/environment';
 import { logger } from '../configs/logger';
 // import { Router } from '../../common/router';
 // import { environment } from '../../common/environment'
@@ -57,22 +58,28 @@ import { logger } from '../configs/logger';
 // }
 
 
-export function createServer(){
-    const application = restify.createServer({
-        name: 'meat-api',
-        version: '1.0.0'
-    })
+export const server = async (): Promise<void> => {
+    try{
+        const application: Server = createServer({
+            name: 'meet-api',
+            version: '2.0.0',
+        });
 
-    application.use(restify.plugins.acceptParser(application.acceptable));
-    application.use(restify.plugins.queryParser());
-    application.use(restify.plugins.bodyParser());
-
-    application.get('/echo/:name', function (req, res, next) {
-        res.send(req.params);
-        return next();
-    });
-
-    application.listen(8080, function () {
-        logger.info(`Application : ${application.name} in ${application.url}`)
-    });
+        application.use(plugins.acceptParser(application.acceptable));
+        application.use(plugins.queryParser());
+        application.use(plugins.bodyParser());
+    
+        application.get('/echo/:name', function (req, res, next) {
+            res.send(req.params);
+            return next();
+        });
+    
+        application.listen({port: environment.server.port}, () => {
+            
+            logger.info(`Application : ${application.name} in ${application.url}`)
+        });
+    }catch(err){
+        logger.error(err)
+        process.exit(1)
+    }
 }

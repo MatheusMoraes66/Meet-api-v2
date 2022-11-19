@@ -3,7 +3,7 @@
 // import { restaurantRouter } from './routers/restaurant'
 // import { reviewsRouter } from './routers/reviews';
 
-import { createServer } from "./server";
+import { server } from "./server";
 
 
-createServer()
+server()
